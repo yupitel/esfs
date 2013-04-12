@@ -1,0 +1,19 @@
+{
+  "name": "esfs",
+  "version": "0.1.0",
+  "description": "wrapper to use fs easily",
+  "main": "esfs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "test"
+  },
+  "readmeFilename": "Readme.md",
+  "keywords": [
+    "fs"
+  ],
+  "author": "Shunsuke <qfoori@gmail.com>",
+  "license": "MIT"
+}
