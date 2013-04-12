@@ -39,7 +39,7 @@ Wrap fs function to use typical function easily.
  - make directory with subdirectory
 
 ## sample    
-    var esfs = require('./esfs');
+    var esfs = require('esfs');
     esfs.cp('input.txt', 'output.txt', options);
 
     esfs.mkdirSync('test');

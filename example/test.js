@@ -1,4 +1,5 @@
-var esfs = require('./esfs');
+var esfs = require('esfs');
+
 esfs.cp('input.txt', 'output.txt', options);
 
 esfs.mkdirSync('test');
