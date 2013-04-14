@@ -1,6 +1,6 @@
 {
   "name": "esfs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "wrapper to use fs easily",
   "main": "esfs.js",
   "repository": {
