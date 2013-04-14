@@ -41,6 +41,45 @@ var esfs = {
       });
     }
   },
+  _find: function(src, dst, options, fnFile, fnDir) {
+    var isAdd = false;
+    var regs = options.regs;
+    if (!regs) {
+      isAdd = true;
+    }
+    var stats = fs.lstatSync(src);
+    if (!(stats.isDirectory())) {
+      if (options.useFile === true) {
+        if (regs) {
+          for (var i = 0; i < regs.length; i++) {
+            var reg = regs[i];
+            if (reg.test(src)) {
+              isAdd = true;
+              break;
+            }
+          }
+        }
+        if (isAdd === true) {
+          if (fnFile) {fnFile(src, dst);}
+        }
+      }
+    } else {
+      if (options.useDir === true) {
+        if (fnDir) {fnDir(src, dst);}
+      }
+      if (options.recursive === true) {
+        var list = fs.readdirSync(src);
+        list.forEach(function(file) {
+          var srcpath = src + '/' + file;
+          var dstpath;
+          if (dst) {
+            dstpath = dst + '/' + file;
+          }
+          esfs._find(srcpath, dstpath, options, fnFile, fnDir);
+        });
+      }
+    }
+  },
   _setFilter: function(filter) {
     if (!filter) {
       return null;
@@ -54,6 +93,61 @@ var esfs = {
       regs.push(reg);
     }
     return regs;
+  },
+  _setOption: function(options) {
+    var result = {};    
+    result.recursive = true;
+    result.useFile   = true;
+    result.useDir    = true;
+    if (options) {
+      result.regs = esfs._setFilter(options.filter);
+      if (options.type === 'd') {
+        result.useFile = false;
+      } else if (options.type === 'f') {
+        result.useDir  = false;
+      }
+      if (options.recursive === false) {
+        result.recursive = false;
+      }
+    }
+    return result;
+  },
+  find: function(path, options, fn) {
+    if (options) {
+      if (typeof options === 'function') {
+        fn = options;
+        options = undefined;
+      }
+    }
+    var args = esfs._setOption(options);
+    var cb = function(exists) {
+      var results = [];
+      var fnFile = function(src, dst) {
+        results.push(src);        
+      };
+
+      if (exists) {
+        esfs._find(path, null, args, fnFile);
+      } else {
+        console.log('   \033[36m' + path + ' is not found.\033[0m');
+      }
+      if (fn) {fn(results);}
+    };
+    fs.exists(path, cb);
+  },  
+  findSync: function(path, options) {
+    var args = esfs._setOption(options);
+    if (fs.existsSync(path)) {
+      var results = [];
+      var fnFile = function(src, dst) {
+        results.push(src);
+      };
+      esfs._find(path, null, args, fnFile);
+      return results;
+    } else {
+      console.log('   \033[36m' + path + ' is not found.\033[0m');
+      return null;
+    }
   },
   cp: function(src, dst, options, fn) {
     if (options) {
