@@ -7,6 +7,7 @@
 var fs = require('fs');
 
 var esfs = {
+  /*
   _cp: function(src, dst, regs) {
     if (!src || !dst) {
       return;
@@ -41,11 +42,12 @@ var esfs = {
       });
     }
   },
+  */
   _find: function(src, dst, options, fnFile, fnDir) {
-    var isAdd = false;
+    var isUse = false;
     var regs = options.regs;
     if (!regs) {
-      isAdd = true;
+      isUse = true;
     }
     var stats = fs.lstatSync(src);
     if (!(stats.isDirectory())) {
@@ -54,12 +56,12 @@ var esfs = {
           for (var i = 0; i < regs.length; i++) {
             var reg = regs[i];
             if (reg.test(src)) {
-              isAdd = true;
+              isUse = true;
               break;
             }
           }
         }
-        if (isAdd === true) {
+        if (isUse === true) {
           if (fnFile) {fnFile(src, dst);}
         }
       }
@@ -122,11 +124,10 @@ var esfs = {
     var args = esfs._setOption(options);
     var cb = function(exists) {
       var results = [];
-      var fnFile = function(src, dst) {
-        results.push(src);        
-      };
-
       if (exists) {
+        var fnFile = function(src, dst) {
+          results.push(src);        
+        };
         esfs._find(path, null, args, fnFile);
       } else {
         console.log('   \033[36m' + path + ' is not found.\033[0m');
@@ -149,6 +150,14 @@ var esfs = {
       return null;
     }
   },
+  _cpFile: function(src, dst) {
+    var is = fs.createReadStream(src);
+    var os = fs.createWriteStream(dst);
+    is.pipe(os);
+  },
+  _cpDir: function(src, dst) {
+    esfs.mkdirSync(dst);
+  },
   cp: function(src, dst, options, fn) {
     if (options) {
       if (typeof options === 'function') {
@@ -156,13 +165,10 @@ var esfs = {
         options = undefined;
       }
     }
-    var regs;
-    if (options) {
-      regs = esfs._setFilter(options.filter);
-    }
+    var args = esfs._setOption(options);
     var cb = function(exists) {
       if (exists) {
-        esfs._cp(src, dst, regs);
+        esfs._find(src, dst, args, esfs._cpFile, esfs._cpDir);
       } else {
         console.log('   \033[36m' + src + ' is not found.\033[0m');
       }
@@ -171,12 +177,9 @@ var esfs = {
     fs.exists(src, cb);
   },
   cpSync: function(src, dst, options) {
-    var regs;
-    if (options) {
-      regs = esfs._setFilter(options.filter);
-    }
+    var args = esfs._setOption(options);
     if (fs.existsSync(src)) {
-      esfs._cp(src, dst, regs);
+      esfs._find(src, dst, args, esfs._cpFile, esfs._cpDir);
     } else {
       console.log('   \033[36m' + src + ' is not found.\033[0m');
     }
