@@ -7,42 +7,6 @@
 var fs = require('fs');
 
 var esfs = {
-  /*
-  _cp: function(src, dst, regs) {
-    if (!src || !dst) {
-      return;
-    }
-    var isCopy = false;
-    if (!regs) {
-      isCopy = true;
-    }
-    var stats = fs.lstatSync(src);
-    if (!(stats.isDirectory())) {
-      if (regs) {
-        for (var i = 0; i < regs.length; i++) {
-          var reg = regs[i];
-          if (reg.test(src)) {
-            isCopy = true;
-            break;
-          }
-        }
-      }
-      if (isCopy === true) {
-        var is = fs.createReadStream(src);
-        var os = fs.createWriteStream(dst);
-        is.pipe(os);
-      }
-    } else {
-      esfs.mkdirSync(dst);
-      var list = fs.readdirSync(src);
-      list.forEach(function(file) {
-        var srcpath = src + '/' + file;
-        var dstpath = dst + '/' + file;
-        esfs._cp(srcpath, dstpath, regs);
-      });
-    }
-  },
-  */
   _find: function(src, dst, options, fnFile, fnDir) {
     var isUse = false;
     var regs = options.regs;
