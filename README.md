@@ -8,6 +8,19 @@ wrapper to use fs easily
 Wrap fs function to use typical function easily.
 
 ## Function
+- find
+ - find file / directory
+  - find(path, options, callback);
+     - path: check this path
+     - options
+         - filter: set filter with regexp format.
+         - type: 'd' -> search directory only. 'f' -> search file only.
+             - default value is null (not filtered)
+         - recursive: search directory recursively. default value is true
+     - callback: callback function
+- findSync
+ - find file / directory synchronously
+ - find(path, options);
 - cp
  - copy file / directory
   - cp(src, dst, options, callback);
