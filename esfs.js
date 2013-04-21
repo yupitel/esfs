@@ -199,6 +199,19 @@ var esfs = {
       dir += list[i];
       esfs.mkdirSync(dir, mode);
     }
+  },
+  isDirectory: function(path) {
+    if (!path) {return false;}
+    var stats = fs.lstatSync(path);
+    if (stats.isDirectory()) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  isFile: function(path) {
+    if (!path) {return false;}
+    return !esfs.isDirectory(path);
   }
 };
  

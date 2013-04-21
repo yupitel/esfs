@@ -49,7 +49,7 @@ Wrap fs function to use typical function easily.
 - mkdirSync
  - make directory synchronously
 - mkdirp
- - make directory with subdirectory
+ - make directory recursively like 'mkdir -p'
 
 ## sample    
     var esfs = require('esfs');

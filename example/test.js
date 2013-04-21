@@ -6,6 +6,11 @@ var fnFind = function(results) {
 
 esfs.find('./sample', {filter: ['.ejs']}, fnFind);
 
+console.log(esfs.isDirectory('./sample/'));
+console.log(esfs.isFile('./sample'));
+console.log(esfs.isFile('./esfs.js'));
+
+
 var result = esfs.findSync('./sample', {filter: ['.txt']});
 console.log(result);
 
